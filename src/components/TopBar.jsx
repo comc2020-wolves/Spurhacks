@@ -13,14 +13,13 @@ function TopBar() {
     <nav className="topbar">
       <div className="topbar-container">
         <div className="topbar-brand">
-          <h2>MyApp</h2>
+          <h2>Chat Is This Real?</h2>
           <h5>By Connect</h5>
         </div>
         
         <div className={`topbar-menu ${isMenuOpen ? 'active' : ''}`}>
           <Link to="/" className="topbar-link">Home</Link>
           <Link to="/about" className="topbar-link">About</Link>
-          <Link to="/services" className="topbar-link">Services</Link>
           <Link to="/contact" className="topbar-link">Report a Problem</Link>
         </div>
         
