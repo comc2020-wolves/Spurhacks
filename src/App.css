@@ -1,0 +1,39 @@
+.app {
+  min-height: 100vh;
+  background-color: #f8f9fa;
+}
+
+.main-content {
+  padding-top: 110px;
+  padding-left: 20px;
+  padding-right: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.main-content h1 {
+  color: #333;
+  margin-bottom: 20px;
+  font-size: 2.5rem;
+  font-weight: 700;
+}
+
+.main-content p {
+  color: #666;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 30px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .main-content {
+    padding-top: 110px;
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+  
+  .main-content h1 {
+    font-size: 2rem;
+  }
+}
