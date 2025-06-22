@@ -2,9 +2,11 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import os
 from werkzeug.utils import secure_filename
+from imageModel import get_random_float
 
 app = Flask(__name__)
-CORS(app)  # Enable CORS for React frontend
+# CORS configuration - allow all origins to fix the CORS issue
+CORS(app, origins="*")  # Allow all origins for now
 
 # Configuration
 UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'uploads')
@@ -90,10 +92,23 @@ def upload_file():
         # For example:
         # result = process_file(filepath)
         
+        # Example usage of the random float function
+        random_value = get_random_float(filepath)
+        # Delete the uploaded file after processing
+        try:
+            if os.path.exists(filepath):
+                os.remove(filepath)
+                print(f"SUCCESS: File deleted from {filepath}")
+            else:
+                print(f"WARNING: File not found for deletion: {filepath}")
+        except Exception as e:
+            print(f"ERROR: Failed to delete file {filepath}: {str(e)}")
+        
         return jsonify({
             'message': 'File uploaded successfully',
             'filename': filename,
-            'filepath': filepath
+            'filepath': filepath,
+            'random_value': random_value
         }), 200
         
     except Exception as e:

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { API_BASE_URL } from '../config';
 import './Pages.css';
 
 function Home() {
@@ -7,6 +8,8 @@ function Home() {
   const [previewUrl, setPreviewUrl] = useState(null);
   const [uploadType, setUploadType] = useState('image');
   const [activeTab, setActiveTab] = useState('image');
+  const [randomValue, setRandomValue] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleImageUpload = (event) => {
     const file = event.target.files[0];
@@ -35,21 +38,32 @@ function Home() {
     if (selectedImage || selectedVideo) {
       const file = selectedImage || selectedVideo;
       
+      setIsLoading(true); // Start loading
+      
       try {
+        console.log('Starting upload...');
+        console.log('File:', file);
+        console.log('API URL:', `${API_BASE_URL}/upload`);
+        
         // Create FormData to send file
         const formData = new FormData();
         formData.append('file', file);
         
-        // Send file to Python backend
-        const response = await fetch('http://localhost:5000/upload', {
+        // Send file to Python backend using config URL
+        const response = await fetch(`${API_BASE_URL}/upload`, {
           method: 'POST',
           body: formData,
         });
         
+        console.log('Response status:', response.status);
+        console.log('Response headers:', response.headers);
+        
         const result = await response.json();
+        console.log('Response body:', result);
         
         if (response.ok) {
           console.log('File uploaded successfully:', result);
+          setRandomValue(result.random_value);
           alert(`${uploadType === 'image' ? 'Image' : 'Video'} uploaded successfully!`);
         } else {
           console.error('Upload failed:', result.error);
@@ -57,7 +71,10 @@ function Home() {
         }
       } catch (error) {
         console.error('Error uploading file:', error);
+        console.error('Error details:', error.message);
         alert('Error uploading file. Please try again.');
+      } finally {
+        setIsLoading(false); // Stop loading regardless of success/failure
       }
     }
   };
@@ -91,6 +108,8 @@ function Home() {
     setSelectedVideo(null);
     setPreviewUrl(null);
     setUploadType(activeTab);
+    setRandomValue(null);
+    setIsLoading(false);
   };
 
   return (
@@ -138,10 +157,18 @@ function Home() {
           <div className="preview-header">
             <h1>Your {uploadType === 'image' ? 'Image' : 'Video'}</h1>
             <div className="preview-buttons">
-              <button onClick={handleSubmit} className="submit-btn">
-                Upload to Server
+              <button 
+                onClick={handleSubmit} 
+                className="submit-btn"
+                disabled={isLoading}
+              >
+                {isLoading ? 'Uploading...' : 'Upload to Server'}
               </button>
-              <button onClick={resetUpload} className="change-btn">
+              <button 
+                onClick={resetUpload} 
+                className="change-btn"
+                disabled={isLoading}
+              >
                 Upload New File
               </button>
             </div>
@@ -152,6 +179,17 @@ function Home() {
               <img src={previewUrl} alt="Preview" className="large-image" />
             ) : (
               <video src={previewUrl} controls className="large-video" />
+            )}
+            {randomValue && (
+              <div className="random-value-display">
+                <h3>Sigma Meter: {randomValue.toFixed(4)}</h3>
+              </div>
+            )}
+            {isLoading && (
+              <div className="loading-overlay">
+                <div className="loading-spinner"></div>
+                <p>Processing your {uploadType}...</p>
+              </div>
             )}
           </div>
         </div>

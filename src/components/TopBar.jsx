@@ -13,7 +13,7 @@ function TopBar() {
     <nav className="topbar">
       <div className="topbar-container">
         <div className="topbar-brand">
-          <h2>Chat Is This Real?</h2>
+          <h2>Pixel Proof</h2>
           <h5>By Connect</h5>
         </div>
         
